@@ -39,12 +39,13 @@ TokenType getToken(void){
 StateType state = START;
 TokenType currentToken=ID;//Initialization
 int getStringSize=0;
-int isSave=TRUE;
+
     
     while (state!=OVER)
     {
+        int isSave=TRUE;
         int c=getNextChar();
-        printf("%c  sss\n",c);
+//        printf("%c  sss\n",c);
         switch (state)
         {
             case START:
@@ -178,7 +179,7 @@ void printToken(TokenType token,const char* getString){
         case CHAR:
             printf("reserved word: %s\n",getString);
             break;
-        case SIGN: printf("sign: %s\n",getString);break;
+        case SIGN: printf("sign, %s\n",getString);break;
         case ASSIGN: printf("=\n"); break;
         case LT: printf("<\n"); break;
         case LE: printf("<=\n"); break;
