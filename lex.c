@@ -14,9 +14,10 @@ static int isEnd=FALSE;
 static int getNextChar(void){
     if(pos>=currentLineSize)
     {
+        lineid++;
         if (fgets(currentLine,500,source))
         {
-//        printf("line:%4d",lineid);//print line id first
+        printf("line:%d",lineid);//print line id first
         currentLineSize = strlen(currentLine);
         pos = 0;
         return currentLine[pos++];
