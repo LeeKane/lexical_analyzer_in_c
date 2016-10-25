@@ -7,13 +7,13 @@
 #include <ctype.h>
 #include <string.h>
 
-#ifndef FALSE
-#define FALSE 0
-#endif
 
-#ifndef TRUE
+#define FALSE 0
+
+
+
 #define TRUE 1
-#endif
+
 
 typedef enum{
     /* reserved words */
@@ -24,21 +24,21 @@ typedef enum{
 	PLUS,MINUS,TIMES,LPAREN,RPAREN,SEMI,COMMA,
 	LSQUARE,RSQUARE,LBRACE,RBRACE,
     /* diffcult symbols*/
-    LE,GE,NEQ,ASSIGN,EQ,LT,GT,SLASH,
+    LE,GE,NEQ,ASSIGN,EQ,LT,GT,SLASH,SIGN,
     /*other*/
     ENDFILE,ERROR
    } TokenType;
 
 typedef enum{
     START,
-    ASG,EQUAL,
-    ENTERCOMMENT,INCOMMENT,EXISTCOMMENT,
-    INOVER,
-    INNUM,INID,
-    INLT,INLTE,
-    INGT,INGTE,
-    INNEQ,
-    DONE}StateType;
+    ASSIGNSTA,EQUALSTA,
+    ENTERCOMMENT,COMMENTSTA,EXISTCOMMENT,
+    SLASHSTA,SIGNSTA,
+    NUMSTA,IDSTA,
+    LTSTA,LESTA,
+    GTSTA,GESTA,
+    NEQSTA,
+    OVER}StateType;
 
 extern FILE* source; 	//point to source code file
 extern FILE* listing; 	//output stream

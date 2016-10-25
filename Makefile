@@ -8,4 +8,4 @@ clean:
 	rm lex.o main
 	
 run: main
-	./main ./sample.c
+	./main ./sample.txt
