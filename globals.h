@@ -2,9 +2,6 @@
  likai
  2016-10-24
  */
-#ifndef _GLOBALS_H_
-#define _GLOBALS_H_
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -19,19 +16,29 @@
 #endif
 
 typedef enum{
-	ENDFILE,ERROR,	
     /* reserved words */
-    IF,WHILE,ELSE,INT,RETURN,VOID,
-    /* multicharacter tokens */
+    IF,WHILE,ELSE,INT,CHAR,RETURN,VOID,
+    /* set */
     ID,NUM,
-    /* special symbols */
-    ASSIGN,EQ,NEQ,
-	LT,LTE,
-	GT,GTE,
-	PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,SEMI,
-	COMMA,
+    /* simple symbols */
+	PLUS,MINUS,TIMES,LPAREN,RPAREN,SEMI,COMMA,
 	LSQUARE,RSQUARE,LBRACE,RBRACE,
+    /* diffcult symbols*/
+    LE,GE,NEQ,ASSIGN,EQ,LT,GT,SLASH,
+    /*other*/
+    ENDFILE,ERROR
    } TokenType;
+
+typedef enum{
+    START,
+    ASG,EQUAL,
+    ENTERCOMMENT,INCOMMENT,EXISTCOMMENT,
+    INOVER,
+    INNUM,INID,
+    INLT,INLTE,
+    INGT,INGTE,
+    INNEQ,
+    DONE}StateType;
 
 extern FILE* source; 	//point to source code file
 extern FILE* listing; 	//output stream
@@ -41,5 +48,4 @@ extern int lineno;		//line no for listing
 extern int EchoSource;	//the control signal to print the source code 
 extern int TraceScan;	//the control signal to print the tokens
 extern int Error; 
-#endif
 
