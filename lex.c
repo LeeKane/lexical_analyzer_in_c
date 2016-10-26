@@ -6,34 +6,14 @@
 #include "globals.h"
 #include "lex.h"
 void printToken(TokenType, const char*);
+int getNextChar(void);
+TokenType checkReserved (char* s);
 static int pos=0;
 static int lineid=0;
 static char currentLine[500];//set size 500
 static int currentLineSize;
 static int isEnd=FALSE;
 char getString[500];
-
-static int getNextChar(void){
-    if(pos>=currentLineSize)
-    {
-        lineid++;
-        if (fgets(currentLine,500,source))
-        {
-        currentLineSize = strlen(currentLine);
-        pos = 0;
-        return currentLine[pos++];
-        }
-        else
-        {
-        isEnd = TRUE;
-        return 0;
-        }
-    }
-    else
-        return currentLine[pos++];
-
-}
-
 
 TokenType getToken(void){
 StateType state = START;
@@ -228,55 +208,131 @@ int getStringSize=0;
         }
     }
     printf("line:%d  ",lineid);//print line id first
+    if(currentToken==ID)
+    {
+        currentToken=checkReserved(getString);
+    }
     printToken(currentToken,getString);
     return currentToken;
 }
 
 void printToken(TokenType token,const char* getString){
     switch(token){
-        case IF:
-        case WHILE:
-        case ELSE:
-        case RETURN:
-        case INT:
-        case VOID:
-        case CHAR:
-            printf("reserved word: %s\n",getString);
+        case SIGN:
+            printf("sign,            %s\n",getString);
             break;
-        case SIGN: printf("sign, %s\n",getString);break;
-        case ASSIGN: printf("=\n"); break;
-        case LT: printf("<\n"); break;
-        case LE: printf("<=\n"); break;
-        case GT: printf(">\n"); break;
-        case GE: printf(">=\n"); break;
-        case EQ: printf("==\n"); break;
-        case NEQ: printf("!=\n"); break;
-        case NOT: printf("!\n"); break;
-        case LPAREN: printf("(\n"); break;
-        case RPAREN: printf(")\n"); break;
-        case SEMI: printf(";\n"); break;
-        case COMMA: printf(",\n"); break;
-        case LSQUARE: printf("[\n"); break;
-        case RSQUARE: printf("]\n"); break;
-        case LBRACE: printf("{\n"); break;
-        case RBRACE: printf("}\n"); break;
-        case PLUS: printf("+\n"); break;
-        case MINUS: printf("-\n"); break;
-        case TIMES: printf("*\n"); break;
-        case SLASH: printf("/\n"); break;
-        case ENDFILE: printf("EOF\n"); break;
+        case ASSIGN:
+            printf("=\n");
+            break;
+        case LT:
+            printf("<\n");
+            break;
+        case LE:
+            printf("<=\n");
+            break;
+        case GT:
+            printf(">\n");
+            break;
+        case GE:
+            printf(">=\n");
+            break;
+        case EQ:
+            printf("==\n");
+            break;
+        case NEQ:
+            printf("!=\n");
+            break;
+        case NOT:
+            printf("!\n");
+            break;
+        case LPAREN:
+            printf("(\n");
+            break;
+        case RPAREN:
+            printf(")\n");
+            break;
+        case SEMI:
+            printf(";\n");
+            break;
+        case COMMA:
+            printf(",\n");
+            break;
+        case LSQUARE:
+            printf("[\n");
+            break;
+        case RSQUARE:
+            printf("]\n");
+            break;
+        case LBRACE:
+            printf("{\n");
+            break;
+        case RBRACE:
+            printf("}\n");
+            break;
+        case PLUS:
+            printf("+\n");
+            break;
+        case MINUS:
+            printf("-\n");
+            break;
+        case TIMES:
+            printf("*\n");
+            break;
+        case SLASH:
+            printf("/\n");
+            break;
+        case ENDFILE:
+            printf("END\n");
+            break;
         case NUM:
-            printf("NUM, val=%s\n",getString);
+            printf("NUM,             val=%s\n",getString);
             break;
         case ID:
-            printf("ID, name=%s\n",getString);
+            printf("ID,              name=%s\n",getString);
+            break;
+        case RESERVEDWORD:
+            printf("reserved word:   %s\n",getString);
             break;
         case ERROR:
-            printf("ERROR: %s\n",getString);
+            printf("ERROR:          %s\n",getString);
             break;
         default: /* should never happen */
             printf("Unknown token: %d\n",token);
+            break;
     }
 }
+
+
+
+int getNextChar(void){
+    if(pos>=currentLineSize)
+    {
+        lineid++;
+        if (fgets(currentLine,500,source))
+        {
+            currentLineSize = strlen(currentLine);
+            pos = 0;
+            return currentLine[pos++];
+        }
+        else
+        {
+            isEnd = TRUE;
+            return 0;
+        }
+    }
+    else
+        return currentLine[pos++];
+    
+}
+
+TokenType checkReserved (char* s){
+    int i;
+    for(i=0;i<reservedNum;i++)
+        if(!strcmp(s,reservedWords[i])){
+            return RESERVEDWORD;
+        }
+    return ID;
+}
+
 
 

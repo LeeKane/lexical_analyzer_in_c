@@ -7,17 +7,12 @@
 #include <ctype.h>
 #include <string.h>
 
-
 #define FALSE 0
-
-
-
 #define TRUE 1
-
-
+#define reservedNum 7
 typedef enum{
     /* reserved words */
-    IF,WHILE,ELSE,INT,CHAR,RETURN,VOID,
+    RESERVEDWORD,
     /* set */
     ID,NUM,
     /* simple symbols */
@@ -40,12 +35,7 @@ typedef enum{
     NEQSTA,
     OVER}StateType;
 
-extern FILE* source; 	//point to source code file
-extern FILE* listing; 	//output stream
-extern FILE* code; 		//code text file
-
-extern int lineno;		//line no for listing
-extern int EchoSource;	//the control signal to print the source code 
-extern int TraceScan;	//the control signal to print the tokens
+extern FILE* source;
 extern int Error; 
 
+static char* reservedWords[reservedNum]={"if","while","else","void","int","char","return"};
