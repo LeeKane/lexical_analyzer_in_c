@@ -56,6 +56,14 @@ int getStringSize=0;
                     state=IDSTA;
                 else if(isdigit(c))
                     state=NUMSTA;
+                else if(c=='<')
+                    state=LESTA;
+                else if(c=='>')
+                    state=GESTA;
+                else if(c=='=')
+                    state=ASSIGNSTA;
+                else if(c=='!')
+                    state=NEQSTA;
                     //blank
                 else if ((c == ' ') || (c == '\t') || (c == '\n'))
                     isSave = FALSE;
@@ -149,6 +157,62 @@ int getStringSize=0;
                     }
                 }
                 break;
+            case LESTA:
+                if(c=='=')
+                {
+                    state=OVER;
+                    currentToken=LE;
+                }
+                else
+                {
+                    pos--;
+                    isSave=FALSE;
+                    state=OVER;
+                    currentToken=LT;
+                }
+                break;
+            case GESTA:
+                if(c=='=')
+                {
+                    state=OVER;
+                    currentToken=GE;
+                }
+                else
+                {
+                    pos--;
+                    isSave=FALSE;
+                    state=OVER;
+                    currentToken=GT;
+                }
+                break;
+            case ASSIGNSTA:
+                if(c=='=')
+                {
+                    state=OVER;
+                    currentToken=EQ;
+                }
+                else
+                {
+                    pos--;
+                    isSave=FALSE;
+                    state=OVER;
+                    currentToken=ASSIGN;
+                }
+                break;
+            case NEQSTA:
+                if(c=='=')
+                {
+                    state=OVER;
+                    currentToken=NEQ;
+                }
+                else
+                {
+                    pos--;
+                    isSave=FALSE;
+                    state=OVER;
+                    currentToken=NOT;
+                }
+                break;
             case OVER:
             default:
                 printf("ERROR IN %d\n",state);
@@ -187,6 +251,7 @@ void printToken(TokenType token,const char* getString){
         case GE: printf(">=\n"); break;
         case EQ: printf("==\n"); break;
         case NEQ: printf("!=\n"); break;
+        case NOT: printf("!\n"); break;
         case LPAREN: printf("(\n"); break;
         case RPAREN: printf(")\n"); break;
         case SEMI: printf(";\n"); break;
