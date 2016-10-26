@@ -1,8 +1,26 @@
-a+sad=+111;
-1-(sadd)=-11;
- int d12=akdh();
-1<=5;
-!this;
-char sdasd!=2;
-5==5;
-if(1<5);
+/*
+likai/
+2016-10-25
+*use for test lab
+*this program can look up the prime number between 100 and 200 
+*/
+
+int prime (int n)
+{
+	int i,test;//test use for lab test
+	for (i=+2;i<=n;i=i++)
+	if (!(n%i!=0)) 
+	{
+	return 0;
+	}
+	return 1;
+}
+
+void main()
+{
+	int m;
+	for(m=+100;m<=200;m=m++)
+	if(prime(m)) 
+	printf(m);
+}
+/*A***WRONG**COMMENT*

@@ -9,7 +9,7 @@
 
 #define FALSE 0
 #define TRUE 1
-#define reservedNum 7
+#define reservedNum 9
 typedef enum{
     /* reserved words */
     RESERVEDWORD,
@@ -17,9 +17,11 @@ typedef enum{
     ID,NUM,
     /* simple symbols */
 	PLUS,MINUS,TIMES,LPAREN,RPAREN,SEMI,COMMA,
-	LSQUARE,RSQUARE,LBRACE,RBRACE,
+	LSQUARE,RSQUARE,LBRACE,RBRACE,MOD,
     /* diffcult symbols*/
     LE,GE,NEQ,NOT,ASSIGN,EQ,LT,GT,SLASH,SIGN,
+    /*comment*/
+    COMMENT,
     /*other*/
     ENDFILE,ERROR
    } TokenType;
@@ -27,7 +29,7 @@ typedef enum{
 typedef enum{
     START,
     ASSIGNSTA,EQUALSTA,
-    ENTERCOMMENT,COMMENTSTA,EXISTCOMMENT,
+    ENTERCOMMENT,COMMENTSTA,OUTCOMMENT,
     SLASHSTA,SIGNSTA,
     NUMSTA,IDSTA,
     LTSTA,LESTA,
@@ -38,4 +40,4 @@ typedef enum{
 extern FILE* source;
 extern int Error; 
 
-static char* reservedWords[reservedNum]={"if","while","else","void","int","char","return"};
+static char* reservedWords[reservedNum]={"if","while","for","else","void","int","char","return","printf"};

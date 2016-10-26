@@ -13,6 +13,7 @@ static int lineid=0;
 static char currentLine[500];//set size 500
 static int currentLineSize;
 static int isEnd=FALSE;
+static int isComment=FALSE;
 char getString[500];
 
 TokenType getToken(void){
@@ -26,13 +27,17 @@ int getStringSize=0;
         int isSave=TRUE;
         int c=getNextChar();
 //        printf("%c  sss\n",c);
+        if(isComment)
+        {
+            isSave=FALSE;
+            state=OVER;
+            return 1;
+        }
         switch (state)
         {
             case START:
                 //diffcult and set
-                if(c=='+'||c=='-')
-                    state=SIGNSTA;
-                else if(isalpha(c))
+                if(isalpha(c))
                     state=IDSTA;
                 else if(isdigit(c))
                     state=NUMSTA;
@@ -44,6 +49,8 @@ int getStringSize=0;
                     state=ASSIGNSTA;
                 else if(c=='!')
                     state=NEQSTA;
+                else if(c=='/')
+                    state=ENTERCOMMENT;
                     //blank
                 else if ((c == ' ') || (c == '\t') || (c == '\n'))
                     isSave = FALSE;
@@ -56,9 +63,14 @@ int getStringSize=0;
                         case 0:
                             currentToken=ENDFILE;
                             break;
-                        //修改
-                        case '=':
-                            currentToken =ASSIGN;
+                        case'+':
+                            currentToken=PLUS;
+                            break;
+                        case'-':
+                            currentToken=MINUS;
+                            break;
+                        case '%':
+                            currentToken =MOD;
                             break;
                         case '*':
                             currentToken = TIMES;
@@ -111,30 +123,6 @@ int getStringSize=0;
                     isSave=FALSE;
                     state=OVER;
                     currentToken=NUM;
-                }
-                break;
-            case SIGNSTA:
-                if(isdigit(c))
-                {
-                    pos--;
-                    isSave=FALSE;
-                    state=OVER;
-                    currentToken=SIGN;
-                }
-                else
-                {
-                    pos--;
-                    isSave=FALSE;
-                    state=OVER;
-                    pos--;
-                    if(getNextChar()=='+')
-                    {
-                        currentToken=PLUS;
-                    }
-                    else
-                    {
-                        currentToken=MINUS;
-                    }
                 }
                 break;
             case LESTA:
@@ -193,6 +181,56 @@ int getStringSize=0;
                     currentToken=NOT;
                 }
                 break;
+            case ENTERCOMMENT:
+                if(c=='/')
+                {
+                    state=OVER;
+                    currentToken=COMMENT;
+                    isComment=TRUE;
+                }
+                else if(c=='*')
+                {
+                    state=COMMENTSTA;
+                }
+                else
+                {
+                    pos--;
+                    state=OVER;
+                    currentToken=ERROR;
+                }
+                break;
+            case COMMENTSTA:
+                if(c=='*')
+                {
+                    state=OUTCOMMENT;
+                }
+                else
+                {
+                    state=COMMENTSTA;
+                    if(isEnd)
+                    {
+                        state=OVER;
+                        currentToken=ERROR;
+                    }
+                }
+                break;
+            case OUTCOMMENT:
+                if(c=='/')
+                {
+                    state=OVER;
+                    currentToken=COMMENT;
+                }
+                else
+                {
+                    state=COMMENTSTA;
+                    if(isEnd)
+                    {
+                        state=OVER;
+                        currentToken=ERROR;
+                    }
+                    
+                }
+                break;
             case OVER:
             default:
                 printf("ERROR IN %d\n",state);
@@ -220,6 +258,9 @@ void printToken(TokenType token,const char* getString){
     switch(token){
         case SIGN:
             printf("sign,            %s\n",getString);
+            break;
+        case MOD:
+            printf("%%\n");
             break;
         case ASSIGN:
             printf("=\n");
@@ -284,17 +325,20 @@ void printToken(TokenType token,const char* getString){
         case ENDFILE:
             printf("END\n");
             break;
+        case COMMENT:
+            printf("COMMENT\n");
+            break;
         case NUM:
-            printf("NUM,             val=%s\n",getString);
+            printf("NUM,             numberVal=%s\n",getString);
             break;
         case ID:
-            printf("ID,              name=%s\n",getString);
+            printf("ID,              idName=%s\n",getString);
             break;
         case RESERVEDWORD:
             printf("reserved word:   %s\n",getString);
             break;
         case ERROR:
-            printf("ERROR:          %s\n",getString);
+            printf("ERROR:          in this line\n");
             break;
         default: /* should never happen */
             printf("Unknown token: %d\n",token);
@@ -307,6 +351,7 @@ void printToken(TokenType token,const char* getString){
 int getNextChar(void){
     if(pos>=currentLineSize)
     {
+        isComment=FALSE;
         lineid++;
         if (fgets(currentLine,500,source))
         {
